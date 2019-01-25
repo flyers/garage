@@ -3,7 +3,7 @@ import os.path as osp
 
 PROJECT_PATH = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 
-LOG_DIR = PROJECT_PATH + "/data"
+LOG_DIR = osp.join(PROJECT_PATH, "data")
 
 LOG_TENSORBOARD = True
 

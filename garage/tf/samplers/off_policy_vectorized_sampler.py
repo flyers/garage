@@ -15,7 +15,7 @@ import numpy as np
 
 from garage.misc import tensor_utils
 from garage.misc.overrides import overrides
-from garage.tf.envs import VecEnvExecutor
+from garage.tf.envs import VecEnvExecutor, AirsimVecEnvExecutor
 from garage.tf.samplers import BatchSampler
 
 
@@ -48,7 +48,9 @@ class OffPolicyVectorizedSampler(BatchSampler):
                 pickle.loads(pickle.dumps(self.algo.env))
                 for _ in range(n_envs)
             ]
-            self.vec_env = VecEnvExecutor(
+            # self.vec_env = VecEnvExecutor(
+            #     envs=envs, max_path_length=self.algo.max_path_length)
+            self.vec_env = AirsimVecEnvExecutor(
                 envs=envs, max_path_length=self.algo.max_path_length)
         self.env_spec = self.algo.env.spec
 
@@ -66,7 +68,7 @@ class OffPolicyVectorizedSampler(BatchSampler):
         :return: A list of paths.
         """
         paths = []
-        obses = self.vec_env.reset()
+        obses, env_infos = self.vec_env.reset()
         dones = np.asarray([True] * self.vec_env.num_envs)
         running_paths = [None] * self.vec_env.num_envs
 

@@ -14,6 +14,8 @@ from abc import abstractmethod
 
 import numpy as np
 
+_uint8_keys_ = ['observation', 'next_observation', 'terminal']
+
 
 class ReplayBuffer(metaclass=abc.ABCMeta):
     """Abstract class for Replay Buffer."""
@@ -65,8 +67,14 @@ class ReplayBuffer(metaclass=abc.ABCMeta):
     def _initialize_buffer(self, **kwargs):
         for key, value in kwargs.items():
             self._episode_buffer[key] = list()
-            self._buffer[key] = np.zeros(
-                [self._size, self._time_horizon, *np.array(value).shape[1:]])
+            if key in _uint8_keys_:
+                self._buffer[key] = np.zeros(
+                    [self._size, self._time_horizon, *np.array(value).shape[1:]], 
+                    dtype=np.uint8)
+            else:
+                self._buffer[key] = np.zeros(
+                    [self._size, self._time_horizon, *np.array(value).shape[1:]],
+                    dtype=np.float32)
         self._initialized_buffer = True
 
     def _get_storage_idx(self, size_increment=1):

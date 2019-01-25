@@ -75,6 +75,21 @@ class TfEnv(GarageEnv):
         """
         return self.env.spec.max_episode_steps
 
+class TfAirEnv(TfEnv):
+    """
+    Wrapper for airgym env.
+    """
+
+    @cached_property
+    @overrides
+    def max_episode_steps(self):
+        """
+        Returns gym.Env's max episode steps.
+         Returns:
+            max_episode_steps (int)
+        """
+        return self.env.spec.max_episode_steps
+
 
 class VecTfEnv:
     def __init__(self, vec_env):

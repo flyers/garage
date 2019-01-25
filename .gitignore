@@ -41,3 +41,5 @@ sandbox/
 .gitmodules
 *.orig
 .coverage
+.vscode
+rlgarage.egg-info
