@@ -67,14 +67,14 @@ class ReplayBuffer(metaclass=abc.ABCMeta):
     def _initialize_buffer(self, **kwargs):
         for key, value in kwargs.items():
             self._episode_buffer[key] = list()
-            if key in _uint8_keys_:
-                self._buffer[key] = np.zeros(
-                    [self._size, self._time_horizon, *np.array(value).shape[1:]], 
-                    dtype=np.uint8)
+            if value[0].shape != ():
+                _dtype = value[0][0].dtype
             else:
-                self._buffer[key] = np.zeros(
-                    [self._size, self._time_horizon, *np.array(value).shape[1:]],
-                    dtype=np.float32)
+                _dtype = value[0].dtype
+            _dtype = np.float32 if _dtype == np.float64 else _dtype
+            self._buffer[key] = np.zeros(
+                [self._size, self._time_horizon, *np.array(value).shape[1:]],
+                dtype=_dtype)
         self._initialized_buffer = True
 
     def _get_storage_idx(self, size_increment=1):
